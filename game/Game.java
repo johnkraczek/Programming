@@ -1,7 +1,8 @@
 package game;
 
 import java.awt.EventQueue;
-import java.util.Random;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -25,16 +26,19 @@ public class Game extends JPanel {
 		Timer timer = new Timer();
 		TimerTask task = new TimerTask() {
 			public void run() {
-				Random rand = new Random();
+		/*		Random rand = new Random();
 				int col = rand.nextInt(Common.rowColLength);
 				int row = rand.nextInt(Common.rowColLength);
-				int jewel = rand.nextInt(Common.jewelTypes);
-
+				int jewel = rand.nextInt(Common.jewelTypes);*/
+				int row =0;
+				int col = 0;
+				int jewel = 0;
+				
 				grid.SwitchJewel(row, col, jewel);
 				repaint();
 			}
 		};
-		timer.schedule(task, 1, 10);
+		timer.schedule(task, 1, 500);
 	}
 
 	public static void main(String[] args) {
