@@ -6,7 +6,7 @@ import javax.swing.ImageIcon;
 
 public class Common {
 	public static final int jewelWidth = 50;
-	public static final int jewelTypes = 5;
+	public static final int jewelTypes = 6;
 	public static final int rowColLength = 8;
 
 	public static final int frameHeight = 515;
@@ -25,7 +25,7 @@ public class Common {
 
 	public static final String background = "res/gameBackground.jpg";
 
-	public static final String[] jewelPath = new String[] { "res/Jewel1.png",
+	public static final String[] jewelPath = new String[] { "res/Jewel0.png","res/Jewel1.png",
 			"res/Jewel2.png", "res/Jewel3.png", "res/jewel4.png",
 			"res/Jewel5.png" };
 

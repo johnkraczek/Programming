@@ -16,30 +16,28 @@ public class Grid extends JPanel implements MouseListener {
 	protected int[][] grid = new int[Common.rowColLength][Common.rowColLength];
 	protected boolean[][] selected = new boolean[Common.rowColLength][Common.rowColLength];
 	protected boolean[][] swap = new boolean[Common.rowColLength][Common.rowColLength];
+	protected Random rand = new Random();
 
 	public Grid() {
 		this.setBounds(Common.gridLeft, Common.gridTop, Common.rowColLength
 				* Common.jewelWidth, Common.rowColLength * Common.jewelWidth);
 		this.addMouseListener(this);
 		Common.setJewelType();
-		Random rand = new Random();
 		for (int i = 0; i < Common.rowColLength; i++) {
 			for (int j = 0; j < Common.rowColLength; j++) {
-				grid[i][j] = rand.nextInt(Common.jewelTypes);
+				grid[i][j] = rand.nextInt(Common.jewelTypes - 1) + 1;
 			}
 		}
 	}
 
 	public void switchJewel(int row, int col, int swpRow, int swpCol) {
 
-		//System.out.println("Before Switch at " + row + " " + col + " Which is a " + grid[row][col]);
-
 		int temp = grid[row][col];
 		grid[row][col] = grid[swpRow][swpCol];
 		grid[swpRow][swpCol] = temp;
 		checkBroken(swpRow, swpCol);
-		checkBroken(row,col);
-
+		checkBroken(row, col);
+		checkEmpty();
 	}
 
 	private void checkBroken(int row, int col) {
@@ -70,13 +68,16 @@ public class Grid extends JPanel implements MouseListener {
 				colLength += checkDirection(row, col, 4, type) - 1;
 			}
 		}
-		
-		if(rowLength>=3){
-			breakJewels(row,col,1);
+
+		if (rowLength > 2) {
+			breakJewels(row, col, 1, type);
+			breakJewels(row, col, 2, type);
 		}
-		if(colLength>3){
-			breakJewels(row,col,2);
+		if (colLength > 2) {
+			breakJewels(row, col, 3, type);
+			breakJewels(row, col, 4, type);
 		}
+
 	}
 
 	private int checkDirection(int row, int col, int dir, int type) {
@@ -110,21 +111,66 @@ public class Grid extends JPanel implements MouseListener {
 		return 1;
 	}
 
-	private void breakJewels(int row, int col, int dir){
-		/* row (grid row) 
-		 * col (grid col)
-		 * dir (direction)
-		 *  1 = row
-		 *  2 = col
+	private void breakJewels(int row, int col, int dir, int type) {
+		/*
+		 * dir: 1+2 Row(left/right) 3+4 Col(down/up)
 		 */
-		
-		
-		
-		
-		
+
+		switch (dir) {
+		case 1:
+			if (row + 1 < Common.rowColLength && (grid[row + 1][col] == type)) {
+				breakJewels(row + 1, col, 1, type);
+			}
+		case 2:
+
+			if (row - 1 >= 0 && (grid[row - 1][col] == type)) {
+				breakJewels(row - 1, col, 2, type);
+			}
+			break;
+		case 3:
+			if (col + 1 < Common.rowColLength && (grid[row][col + 1] == type)) {
+				breakJewels(row, col + 1, 3, type);
+			}
+			break;
+		case 4:
+			if (col - 1 >= 0 && (grid[row][col - 1] == type)) {
+				breakJewels(row, col - 1, 4, type);
+			}
+			break;
+		}
+
+		grid[row][col] = 0;
 	}
-	
-	
+
+	private void checkEmpty() {
+		for (int i = Common.rowColLength - 1; i >= 0; i--) {
+			for (int j = Common.rowColLength - 1; j >= 0; j--) {
+
+				if (grid[i][j] == 0) {
+					fillDown(i, j);
+
+				}
+			}
+		}
+	}
+
+	private void fillDown(int row, int col) {
+int i = 1;
+		while(col-i>=0) {
+			if (grid[row][col - i] != 0) {
+				int temp = grid[row][col];
+				grid[row][col] = grid[row][col - i];
+				grid[row][col - i] = temp;
+			return;	
+			}else{
+				i++;
+			}
+		}
+		
+		grid[row][col] = rand.nextInt(Common.jewelTypes - 1) + 1;
+		return;
+	}
+
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		for (int i = 0; i < Common.rowColLength; i++) {
@@ -181,8 +227,6 @@ public class Grid extends JPanel implements MouseListener {
 				swap[i][j] = false;
 			}
 		}
-
-		// check if jewels are of the same type
 	}
 
 	public void mouseClicked(MouseEvent e) {
