@@ -31,55 +31,100 @@ public class Grid extends JPanel implements MouseListener {
 	}
 
 	public void switchJewel(int row, int col, int swpRow, int swpCol) {
+
+		//System.out.println("Before Switch at " + row + " " + col + " Which is a " + grid[row][col]);
+
 		int temp = grid[row][col];
 		grid[row][col] = grid[swpRow][swpCol];
 		grid[swpRow][swpCol] = temp;
-			
-		
+		checkBroken(swpRow, swpCol);
+		checkBroken(row,col);
+
 	}
-	
-	private void checkBroken(int row, int col){
+
+	private void checkBroken(int row, int col) {
 		int type = grid[row][col];
 		int rowLength = 0;
 		int colLength = 0;
-		
-		if(row+1<Common.rowColLength && (grid[row+1][col] == type)){
-			rowLength = checkDirection(row,col,2,type);
-		}
-		if(row-1>=0 && (grid[row-1][col] == type)){
-			rowLength += checkDirection(row,col,4,type);
-		}
-		if(col+1<Common.rowColLength && (grid[row][col+1] == type)){
-			colLength = checkDirection(row,col,2,type);
-		}
-		if(col-1<=0 && (grid[row][col-1] == type)){
-			colLength += checkDirection(row,col,4,type);
+
+		if (row + 1 < Common.rowColLength && (grid[row + 1][col] == type)) {
+			rowLength = checkDirection(row, col, 1, type);
 		}
 
-		System.out.println("the row len: " + rowLength + " The Col Len: "+ colLength);
+		if (row - 1 >= 0 && (grid[row - 1][col] == type)) {
+			if (rowLength == 0) {
+				rowLength += checkDirection(row, col, 2, type);
+			} else {
+				rowLength += checkDirection(row, col, 2, type) - 1;
+			}
+		}
+
+		if (col + 1 < Common.rowColLength && (grid[row][col + 1] == type)) {
+			colLength = checkDirection(row, col, 3, type);
+		}
+
+		if (col - 1 >= 0 && (grid[row][col - 1] == type)) {
+			if (colLength == 0) {
+				colLength += checkDirection(row, col, 4, type);
+			} else {
+				colLength += checkDirection(row, col, 4, type) - 1;
+			}
+		}
+		
+		if(rowLength>=3){
+			breakJewels(row,col,1);
+		}
+		if(colLength>3){
+			breakJewels(row,col,2);
+		}
 	}
-	
-	private int checkDirection(int row, int col, int dir, int type){
-		/* 	 dir:
-			1 left
-			2 up
-			3 right
-			4 down
-		*/
-		switch(dir){
+
+	private int checkDirection(int row, int col, int dir, int type) {
+		/*
+		 * dir: 1 right 2 left 3 down 4 up
+		 */
+
+		switch (dir) {
 		case 1:
+			if (row + 1 < Common.rowColLength && (grid[row + 1][col] == type)) {
+				return checkDirection(row + 1, col, 1, type) + 1;
+			}
 			break;
 		case 2:
+			if (row - 1 >= 0 && (grid[row - 1][col] == type)) {
+				return checkDirection(row - 1, col, 2, type) + 1;
+			}
 			break;
 		case 3:
+			if (col + 1 < Common.rowColLength && (grid[row][col + 1] == type)) {
+				return checkDirection(row, col + 1, 3, type) + 1;
+			}
 			break;
 		case 4:
+			if (col - 1 >= 0 && (grid[row][col - 1] == type)) {
+				return checkDirection(row, col - 1, 4, type) + 1;
+			}
 			break;
 		}
-		
-		return 0;
+
+		return 1;
 	}
 
+	private void breakJewels(int row, int col, int dir){
+		/* row (grid row) 
+		 * col (grid col)
+		 * dir (direction)
+		 *  1 = row
+		 *  2 = col
+		 */
+		
+		
+		
+		
+		
+	}
+	
+	
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		for (int i = 0; i < Common.rowColLength; i++) {
@@ -100,9 +145,9 @@ public class Grid extends JPanel implements MouseListener {
 	}
 
 	public void callTimer() {
-		
-		
-//logic to check if a jewel is selected and then switch with another if next to. 
+
+		// logic to check if a jewel is selected and then switch with another if
+		// next to.
 		for (int i = 0; i < Common.rowColLength; i++) {
 			for (int j = 0; j < Common.rowColLength; j++) {
 				if (selected[i][j]) {
@@ -129,15 +174,15 @@ public class Grid extends JPanel implements MouseListener {
 				}
 			}
 		}
-		// if you selected somewhere on the board that was not next to a selected jewel, then reset swap location. 
+		// if you selected somewhere on the board that was not next to a
+		// selected jewel, then reset swap location.
 		for (int i = 0; i < Common.rowColLength; i++) {
 			for (int j = 0; j < Common.rowColLength; j++) {
 				swap[i][j] = false;
 			}
-		}	
-		
-		
-		//check if jewels are of the same type
+		}
+
+		// check if jewels are of the same type
 	}
 
 	public void mouseClicked(MouseEvent e) {
