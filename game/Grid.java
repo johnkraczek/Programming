@@ -14,8 +14,11 @@ public class Grid extends JPanel implements MouseListener {
 
 	protected boolean gridSelect;
 	protected int[][] grid = new int[Common.rowColLength][Common.rowColLength];
+	protected int[][] animated = new int[Common.rowColLength][Common.rowColLength];
+	protected boolean animating = false;
 	protected boolean[][] selected = new boolean[Common.rowColLength][Common.rowColLength];
 	protected boolean[][] swap = new boolean[Common.rowColLength][Common.rowColLength];
+
 	protected Random rand = new Random();
 
 	public Grid() {
@@ -35,9 +38,15 @@ public class Grid extends JPanel implements MouseListener {
 		int temp = grid[row][col];
 		grid[row][col] = grid[swpRow][swpCol];
 		grid[swpRow][swpCol] = temp;
+
 		checkBroken(swpRow, swpCol);
 		checkBroken(row, col);
 		checkEmpty();
+
+		gridSelect = false;
+		selected[row][col] = false;
+		reset();
+
 	}
 
 	private void checkBroken(int row, int col) {
@@ -142,31 +151,33 @@ public class Grid extends JPanel implements MouseListener {
 		grid[row][col] = 0;
 	}
 
-	private void checkEmpty() {
+	private boolean checkEmpty() {
+		boolean temp = false;
 		for (int i = Common.rowColLength - 1; i >= 0; i--) {
 			for (int j = Common.rowColLength - 1; j >= 0; j--) {
 
 				if (grid[i][j] == 0) {
 					fillDown(i, j);
-
+					temp = true;
 				}
 			}
 		}
+		return temp;
 	}
 
 	private void fillDown(int row, int col) {
-int i = 1;
-		while(col-i>=0) {
+		int i = 1;
+		while (col - i >= 0) {
 			if (grid[row][col - i] != 0) {
 				int temp = grid[row][col];
 				grid[row][col] = grid[row][col - i];
 				grid[row][col - i] = temp;
-			return;	
-			}else{
+				return;
+			} else {
 				i++;
 			}
 		}
-		
+
 		grid[row][col] = rand.nextInt(Common.jewelTypes - 1) + 1;
 		return;
 	}
@@ -175,12 +186,9 @@ int i = 1;
 		Graphics2D g2 = (Graphics2D) g;
 		for (int i = 0; i < Common.rowColLength; i++) {
 			for (int j = 0; j < Common.rowColLength; j++) {
-
 				if (!selected[i][j]) {
-
 					g2.drawImage(Common.jewelType[grid[i][j]], i
 							* Common.jewelWidth, j * Common.jewelWidth, null);
-
 				} else {
 					g2.drawImage(Common.jewelType[grid[i][j]], i
 							* Common.jewelWidth, j * Common.jewelWidth - 10,
@@ -194,34 +202,86 @@ int i = 1;
 
 		// logic to check if a jewel is selected and then switch with another if
 		// next to.
+
 		for (int i = 0; i < Common.rowColLength; i++) {
 			for (int j = 0; j < Common.rowColLength; j++) {
 				if (selected[i][j]) {
 					if (i + 1 < Common.rowColLength && swap[i + 1][j]) {
-						this.switchJewel(i, j, i + 1, j);
-						gridSelect = false;
-						selected[i][j] = false;
+						if(!animating){
+							animating = true;
+							animated[i][j] = 30;
+							//System.out.println("Setting animated to 30");
+						} else {
+							if(animated[i][j]>0){
+								animated[i][j]--;
+								//System.out.print(animated[i][j]);
+							}else{
+								//System.out.print("bad"+animated[i][j]);
+							switchJewel(i, j, i + 1, j);
+							animating = false;
+							}
+						}
 					}
 					if (i - 1 >= 0 && swap[i - 1][j]) {
-						this.switchJewel(i, j, i - 1, j);
-						gridSelect = false;
-						selected[i][j] = false;
+						if(!animating){
+							animating = true;
+							animated[i][j] = 30;
+							//System.out.println("Setting animated to 30");
+						} else {
+							if(animated[i][j]>0){
+								animated[i][j]--;
+								//System.out.print(animated[i][j]);
+							}else{
+								//System.out.print("bad"+animated[i][j]);
+								switchJewel(i, j, i - 1, j);
+								animating = false;
+							}
+						}
 					}
 					if (j + 1 < Common.rowColLength && swap[i][j + 1]) {
-						this.switchJewel(i, j, i, j + 1);
-						gridSelect = false;
-						selected[i][j] = false;
+						
+						if(!animating){
+							animating = true;
+							animated[i][j] = 30;
+							//System.out.println("Setting animated to 30");
+						} else {
+							if(animated[i][j]>0){
+								animated[i][j]--;
+								//System.out.print(animated[i][j]);
+							}else{
+								//System.out.print("bad"+animated[i][j]);
+								switchJewel(i, j, i, j + 1);
+								animating = false;
+							}
+						}
 					}
 					if (j - 1 >= 0 && swap[i][j - 1]) {
-						this.switchJewel(i, j, i, j - 1);
-						gridSelect = false;
-						selected[i][j] = false;
+						if(!animating){
+							animating = true;
+							animated[i][j] = 30;
+							//System.out.println("Setting animated to 30");
+						} else {
+							if(animated[i][j]>0){
+								animated[i][j]--;
+								//System.out.print(animated[i][j]+" ");
+							}else{
+								//System.out.print("bad"+animated[i][j]);
+								switchJewel(i, j, i, j - 1);
+								animating = false;
+							}
+						}
 					}
 				}
 			}
 		}
+
 		// if you selected somewhere on the board that was not next to a
 		// selected jewel, then reset swap location.
+		/*
+
+		}*/
+	}
+	public void reset(){
 		for (int i = 0; i < Common.rowColLength; i++) {
 			for (int j = 0; j < Common.rowColLength; j++) {
 				swap[i][j] = false;
@@ -230,13 +290,15 @@ int i = 1;
 	}
 
 	public void mouseClicked(MouseEvent e) {
-		int col = e.getPoint().x / Common.jewelWidth;
-		int row = e.getPoint().y / Common.jewelWidth;
-		if (!gridSelect) {
-			gridSelect = true;
-			selected[col][row] = true;
-		} else {
-			swap[col][row] = true;
+		if (!animating) {
+			int col = e.getPoint().x / Common.jewelWidth;
+			int row = e.getPoint().y / Common.jewelWidth;
+			if (!gridSelect) {
+				gridSelect = true;
+				selected[col][row] = true;
+			} else {
+				swap[col][row] = true;
+			}
 		}
 	}
 

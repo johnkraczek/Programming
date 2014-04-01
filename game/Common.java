@@ -5,9 +5,12 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 
 public class Common {
+	public static final int framerate = 30;
+	public static final int animateTime = 25;
+	
 	public static final int jewelWidth = 50;
 	public static final int jewelTypes = 6;
-	public static final int rowColLength = 8;
+	public static final int rowColLength = 3;
 
 	public static final int frameHeight = 515;
 	public static final int frameWidth = 775;
