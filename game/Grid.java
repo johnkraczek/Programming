@@ -91,6 +91,7 @@ public class Grid extends JPanel implements MouseListener {
 				}
 			}
 		} else {
+			
 			grid[row][col].moveTo[0] = Common.animationDur;
 			grid[row][col].moveTo[1] = swpRow;
 			grid[row][col].moveTo[2] = swpCol;
@@ -206,7 +207,7 @@ public class Grid extends JPanel implements MouseListener {
 		grid[row][col].type = 0;
 	}
 
-	private void checkEmpty() {
+	public void checkEmpty() {
 		for (int i = Common.rowColLength - 1; i >= 0; i--) {
 			for (int j = Common.rowColLength - 1; j >= 0; j--) {
 				if (grid[i][j].type == 0) {
@@ -221,26 +222,15 @@ public class Grid extends JPanel implements MouseListener {
 		int i = 1;
 		while (col - i >= 0) {
 			if (grid[row][col - i].type != 0) {
-
-				if (grid[row][col].moveTo[0] != 0) {
-					grid[row][col].moveTo[0]--;
-
-					if (grid[row][col].moveTo[0] == 0) {
-						int temp = grid[row][col].type;
-						grid[row][col].type = grid[row][col - i].type;
-						grid[row][col - i].type = temp;
-					}
-				} else {
-					grid[row][col].moveTo[0] = Common.animationDur;
-					grid[row][col].moveTo[1] = row;
-					grid[row][col].moveTo[2] = col - i;
-				}
+				this.switchJewel(row, col, row, col-i);
 				return;
 			} else {
 				i++;
 			}
 		}
-		grid[row][col].type = rand.nextInt(Common.jewelTypes - 1) + 1;
+		
+		grid[row][col-i+1].type = rand.nextInt(Common.jewelTypes - 1) + 1;
+		
 		return;
 	}
 
@@ -251,6 +241,8 @@ public class Grid extends JPanel implements MouseListener {
 
 				if (grid[i][j].moveTo[0] > 0) {
 
+					//System.out.println("paint" + grid[i][j].moveTo[0]);
+					
 					int x = i * Common.jewelWidth;
 					int y = j * Common.jewelWidth;
 
@@ -268,13 +260,13 @@ public class Grid extends JPanel implements MouseListener {
 
 					offsetX = ((x - mvToX) * ((float) mvtm / Common.animationDur));
 					offsetY = ((y - mvToY) * ((float) mvtm / Common.animationDur));
-
+					
+					//System.out.println("Jewel: ["+ i +"][" + j +  "] Output x: " + (mvToX+offsetX)+" Output y: " + (mvToY+offsetY));
+					
 					g2.drawImage(Common.jewelType[type],
 							(int) (mvToX + offsetX), (int) (mvToY + offsetY),
 							null);
-
 				} else {
-
 					if (!grid[i][j].selected) {
 						g2.drawImage(Common.jewelType[grid[i][j].type], i
 								* Common.jewelWidth, j * Common.jewelWidth,

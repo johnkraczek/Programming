@@ -7,7 +7,7 @@ import javax.swing.ImageIcon;
 public class Common {
 	
 	public static final int fps = 30;
-	public static final int animationDur = 5; 
+	public static final int animationDur = 10; 
 	
 	public static final int jewelWidth = 50;
 	public static final int jewelTypes = 6;
