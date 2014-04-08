@@ -28,7 +28,7 @@ public class Game extends JPanel {
 				grid.callTimer();
 			}
 		};
-		timer.schedule(task, 0, 1000 / Common.fps);
+		timer.schedule(task, 0, 1000/Common.fps);
 	}
 
 	public static void main(String[] args) {
