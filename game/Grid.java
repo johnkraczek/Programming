@@ -29,14 +29,14 @@ public class Grid extends JPanel implements MouseListener {
 				grid[i][j].type = rand.nextInt(Common.jewelTypes - 1) + 1;
 			}
 		}
-		
+
 		do {
 			for (int i = 0; i < Common.rowColLength; i++) {
 				for (int j = 0; j < Common.rowColLength; j++) {
 					checkBroken(i, j);
 				}
 			}
-		} while (initialchkEmpty());	
+		} while (initialchkEmpty());
 	}
 
 	public boolean initialchkEmpty() {
@@ -50,20 +50,20 @@ public class Grid extends JPanel implements MouseListener {
 		}
 		return false;
 	}
-	
+
 	private void fillDownInit(int row, int col) {
-int i = 1;
-		while(col-i>=0) {
+		int i = 1;
+		while (col - i >= 0) {
 			if (grid[row][col - i].type != 0) {
 				int temp = grid[row][col].type;
 				grid[row][col].type = grid[row][col - i].type;
 				grid[row][col - i].type = temp;
-			return;	
-			}else{
+				return;
+			} else {
 				i++;
 			}
 		}
-		
+
 		grid[row][col].type = rand.nextInt(Common.jewelTypes - 1) + 1;
 		return;
 	}
