@@ -10,9 +10,9 @@ public class Common {
 	public static final int fps = 30;
 	public static final int animationDur = 10; 
 	
-	public static final int jewelWidth = 50;
-	public static final int jewelTypes = 6;
-	public static final int rowColLength = 8;
+	public static final int jewelWidth = 25;
+	public static final int jewelTypes = 4;
+	public static final int rowColLength = 15;
 
 	public static final int frameHeight = 515;
 	public static final int frameWidth = 775;
@@ -31,10 +31,12 @@ public class Common {
 	public static final int scoreTxtTop = 75;
 
 	public static final String background = "res/gameBackground.jpg";
-
-	public static Color[] AlphaColor = new Color[animationDur];
 	
-	public static final int labelTime = 10;
+	
+	// ~~ animated label Numbers info ~~//
+	public static final int labelTime = 25;
+	public static final int labelNum = 5;
+	public static Color[] AlphaColor = new Color[labelTime];
 	
 	static final void setAlphaColors(){
 		for (int i=0; i < labelTime; i++){
@@ -42,6 +44,7 @@ public class Common {
 		}
 	}
 	
+	//~~ Jewel Rendering ~~/
 	public static final String[] jewelPath = new String[] { "res/Jewel0.png","res/Jewel1.png",
 			"res/Jewel2.png", "res/Jewel3.png", "res/jewel4.png",
 			"res/Jewel5.png" };
