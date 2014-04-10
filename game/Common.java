@@ -1,5 +1,6 @@
 package game;
 
+import java.awt.Color;
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
@@ -21,14 +22,26 @@ public class Common {
 	
 	public static final int scoreLeft = 100;
 	public static final int scoreTop = 325;
-	public static final int scoreWidth = 150;
+	public static final int scoreWidth = 200;
 	public static final int scoreHeight = 40;
 	
 	public static final int scoreFontSize = 40;
-	public static final String scoreFont = "SansSerif";
+	public static final String scoreFont = "ComicSans";
+	public static final int scoreTxtLeft = 10;
+	public static final int scoreTxtTop = 75;
 
 	public static final String background = "res/gameBackground.jpg";
 
+	public static Color[] AlphaColor = new Color[animationDur];
+	
+	public static final int labelTime = 10;
+	
+	static final void setAlphaColors(){
+		for (int i=0; i < labelTime; i++){
+			AlphaColor[i] = new Color(255,0,0,(int)(255*((float)i/labelTime)));
+		}
+	}
+	
 	public static final String[] jewelPath = new String[] { "res/Jewel0.png","res/Jewel1.png",
 			"res/Jewel2.png", "res/Jewel3.png", "res/jewel4.png",
 			"res/Jewel5.png" };

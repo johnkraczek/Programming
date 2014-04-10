@@ -6,27 +6,44 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.Rectangle2D;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 	
-	public class Hud extends JPanel {
+	public class Hud extends JPanel implements ActionListener {
 
 		private static final long serialVersionUID = 1L;
 
 		Image bg;
+		private static int score = 0;
+		JButton newGame;
 
 		public Hud() {
-			this.setBounds(Common.scoreLeft,Common.scoreTop,Common.scoreWidth,Common.scoreHeight*2);
-
+			this.setBounds(Common.scoreLeft,Common.scoreTop,Common.scoreWidth,Common.scoreHeight*3);
+			
 			bg = new ImageIcon("res/Jewel1.png").getImage();
 			bg = new ImageIcon(bg.getScaledInstance(bg.getWidth(null),
-					bg.getHeight(null), Image.SCALE_SMOOTH)).getImage();
-			//this.setPreferredSize(new Dimension(bg.getWidth(null), bg.getHeight(null)));
+			bg.getHeight(null), Image.SCALE_SMOOTH)).getImage();
+			newGame = new JButton("New Game");
+			newGame.addActionListener(this);
+			this.setLayout(null);
+			newGame.setBounds(50, 85 , 100, 30);
+			this.add(newGame);	
 		}
-
+		
+		public void scored(int i){
+			score+=i;
+		}
+		
+		public void resetScore(){
+			score=0;
+		}
+		
 		public void paintComponent(Graphics g) {
 			//System.out.println("Test Image Getting Painted");
 			//super.paintComponent(g);
@@ -46,7 +63,16 @@ import javax.swing.JPanel;
 			
 			g2.setFont(font);
 			g2.setColor(Color.BLUE);
-			g2.drawString("400", (float)Common.scoreWidth/2, (float)Common.scoreHeight*2-5);
+			g2.drawString(Integer.toString(score), (float)Common.scoreTxtLeft, (float)Common.scoreTxtTop);
+			
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			Object source = event.getSource();
+			if(source == newGame){
+				Grid.newGame = true;
+			}
 			
 		}
 	}

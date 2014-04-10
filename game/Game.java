@@ -24,13 +24,15 @@ public class Game extends JPanel {
 		Timer timer = new Timer();
 		TimerTask task = new TimerTask() {
 			public void run() {
-				
+				if (Grid.newGame) {
+					grid.newGame();
+					Grid.newGame = false;
+				}
 				grid.callTimer();
-
 				repaint();
 			}
 		};
-		timer.schedule(task, 0, 1000/Common.fps);
+		timer.schedule(task, 0, 1000 / Common.fps);
 	}
 
 	public static void main(String[] args) {

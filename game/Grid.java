@@ -1,5 +1,6 @@
 package game;
 
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
@@ -11,22 +12,33 @@ import javax.swing.JPanel;
 public class Grid extends JPanel implements MouseListener {
 
 	private static final long serialVersionUID = -9165676032115582474L;
+	public static boolean newGame = true;
 
 	protected boolean gridSelect;
 	protected boolean animating;
 	protected Jewel[][] grid = new Jewel[Common.rowColLength][Common.rowColLength];
 	protected Random rand = new Random();
+	Hud hud = new Hud();
+
+	int labelX;
+	int labelY;
+	int labelInt;
+	int labelTime;
 
 	public Grid() {
 		this.setBounds(Common.gridLeft, Common.gridTop, Common.rowColLength
 				* Common.jewelWidth, Common.rowColLength * Common.jewelWidth);
 		this.addMouseListener(this);
 		Common.setJewelType();
+		Common.setAlphaColors();
+	}
 
+	public void newGame() {
 		for (int i = 0; i < Common.rowColLength; i++) {
 			for (int j = 0; j < Common.rowColLength; j++) {
 				grid[i][j] = new Jewel();
-				grid[i][j].type = rand.nextInt(Common.jewelTypes - 1) + 1;
+				grid[i][j].type = 0;
+				// grid[i][j].type = rand.nextInt(Common.jewelTypes - 1) + 1;
 			}
 		}
 
@@ -44,6 +56,7 @@ public class Grid extends JPanel implements MouseListener {
 			for (int j = Common.rowColLength - 1; j >= 0; j--) {
 				if (grid[i][j].type == 0) {
 					fillDownInit(i, j);
+					hud.resetScore();
 					return true;
 				}
 			}
@@ -90,8 +103,15 @@ public class Grid extends JPanel implements MouseListener {
 					}
 				}
 			}
+			if (grid[row][col].moveTo[0] < 0) {
+				grid[row][col].moveTo[0] = 0;
+			}
+
+			if (grid[swpRow][swpCol].moveTo[0] < 0) {
+				grid[swpRow][swpCol].moveTo[0] = 0;
+			}
 		} else {
-			
+
 			grid[row][col].moveTo[0] = Common.animationDur;
 			grid[row][col].moveTo[1] = swpRow;
 			grid[row][col].moveTo[2] = swpCol;
@@ -134,12 +154,18 @@ public class Grid extends JPanel implements MouseListener {
 		if (rowLength > 2) {
 			breakJewels(row, col, 1, type);
 			breakJewels(row, col, 2, type);
-		}
+			labelInt = rowLength;
+			labelTime = Common.labelTime;
+			
+		} 
+
 		if (colLength > 2) {
 			breakJewels(row, col, 3, type);
 			breakJewels(row, col, 4, type);
-		}
-
+			labelInt = colLength;
+			labelTime = Common.labelTime;
+			
+		} 
 	}
 
 	private int checkDirection(int row, int col, int dir, int type) {
@@ -204,7 +230,14 @@ public class Grid extends JPanel implements MouseListener {
 			}
 			break;
 		}
-		grid[row][col].type = 0;
+		
+		if (grid[row][col].type > 0) {
+			grid[row][col].type = 0;
+			hud.scored(1);
+			
+			this.labelX = row * Common.jewelWidth;
+			this.labelY = col * Common.jewelWidth;
+		} 
 	}
 
 	public void checkEmpty() {
@@ -222,27 +255,32 @@ public class Grid extends JPanel implements MouseListener {
 		int i = 1;
 		while (col - i >= 0) {
 			if (grid[row][col - i].type != 0) {
-				this.switchJewel(row, col, row, col-i);
+				this.switchJewel(row, col, row, col - i);
 				return;
 			} else {
 				i++;
 			}
 		}
-		
-		grid[row][col-i+1].type = rand.nextInt(Common.jewelTypes - 1) + 1;
-		
+
+		grid[row][col - i + 1].type = rand.nextInt(Common.jewelTypes - 1) + 1;
+
 		return;
 	}
 
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
+
+		Font font = new Font(Common.scoreFont, Font.BOLD, Common.scoreFontSize);
+		g2.setFont(font);
+		
+		
 		for (int i = 0; i < Common.rowColLength; i++) {
 			for (int j = 0; j < Common.rowColLength; j++) {
 
 				if (grid[i][j].moveTo[0] > 0) {
 
-					//System.out.println("paint" + grid[i][j].moveTo[0]);
-					
+					// System.out.println("paint" + grid[i][j].moveTo[0]);
+
 					int x = i * Common.jewelWidth;
 					int y = j * Common.jewelWidth;
 
@@ -260,12 +298,17 @@ public class Grid extends JPanel implements MouseListener {
 
 					offsetX = ((x - mvToX) * ((float) mvtm / Common.animationDur));
 					offsetY = ((y - mvToY) * ((float) mvtm / Common.animationDur));
-					
-					//System.out.println("Jewel: ["+ i +"][" + j +  "] Output x: " + (mvToX+offsetX)+" Output y: " + (mvToY+offsetY));
+
+					// System.out.println("Jewel: ["+ i +"][" + j +
+					// "] Output x: " + (mvToX+offsetX)+" Output y: " +
+					// (mvToY+offsetY));
 					
 					g2.drawImage(Common.jewelType[type],
 							(int) (mvToX + offsetX), (int) (mvToY + offsetY),
 							null);
+
+
+
 				} else {
 					if (!grid[i][j].selected) {
 						g2.drawImage(Common.jewelType[grid[i][j].type], i
@@ -278,6 +321,11 @@ public class Grid extends JPanel implements MouseListener {
 					}
 				}
 			}
+		}
+		if (labelTime > 0){
+		g2.setColor(Common.AlphaColor[labelTime-1]);
+		g2.drawString(Integer.toString(labelInt), (float) this.labelX, (float) this.labelY+2*(labelTime-Common.labelTime));
+		labelTime--;
 		}
 	}
 
@@ -319,7 +367,6 @@ public class Grid extends JPanel implements MouseListener {
 				}
 			}
 		}
-
 	}
 
 	public void mouseClicked(MouseEvent e) {
