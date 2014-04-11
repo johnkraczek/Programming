@@ -8,11 +8,11 @@ import javax.swing.ImageIcon;
 public class Common {
 	
 	public static final int fps = 30;
-	public static final int animationDur = 10; 
+	public static final int animationDur = 5; 
 	
-	public static final int jewelWidth = 25;
-	public static final int jewelTypes = 4;
-	public static final int rowColLength = 15;
+	public static final int jewelWidth = 35;
+	public static final int jewelTypes = 6;
+	public static final int rowColLength = 12;
 
 	public static final int frameHeight = 515;
 	public static final int frameWidth = 775;
@@ -35,7 +35,7 @@ public class Common {
 	
 	// ~~ animated label Numbers info ~~//
 	public static final int labelTime = 25;
-	public static final int labelNum = 5;
+	public static final int labelNum = 10;
 	public static Color[] AlphaColor = new Color[labelTime];
 	
 	static final void setAlphaColors(){

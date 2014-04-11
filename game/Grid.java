@@ -21,7 +21,7 @@ public class Grid extends JPanel implements MouseListener {
 	Hud hud = new Hud();
 	protected int listNum;
 	protected int listpush;
-	protected int[][] label = new int[5][4];
+	protected int[][] label = new int[Common.labelNum][4];
 
 	public Grid() {
 		this.setBounds(Common.gridLeft, Common.gridTop, Common.rowColLength
@@ -161,17 +161,11 @@ public class Grid extends JPanel implements MouseListener {
 		}
 
 		if (rowLength > 2) {
-			breakJewels(row, col, 1, type);
-			breakJewels(row, col, 2, type);
-			listNum = rowLength;
-
+			breakJewels(row, col, 1, type, rowLength);
 		}
 
 		if (colLength > 2) {
-			breakJewels(row, col, 3, type);
-			breakJewels(row, col, 4, type);
-			listNum = colLength;
-
+			breakJewels(row, col, 3, type, colLength);
 		}
 	}
 
@@ -208,7 +202,7 @@ public class Grid extends JPanel implements MouseListener {
 		return 1;
 	}
 
-	private void breakJewels(int row, int col, int dir, int type) {
+	private void breakJewels(int row, int col, int dir, int type, int num) {
 		/*
 		 * dir: 1+2 Row(left/right) 3+4 Col(down/up)
 		 */
@@ -217,23 +211,21 @@ public class Grid extends JPanel implements MouseListener {
 		case 1:
 			if (row + 1 < Common.rowColLength
 					&& (grid[row + 1][col].type == type)) {
-				breakJewels(row + 1, col, 1, type);
+				breakJewels(row + 1, col, 1, type, num);
 			}
-		case 2:
 
 			if (row - 1 >= 0 && (grid[row - 1][col].type == type)) {
-				breakJewels(row - 1, col, 2, type);
+				breakJewels(row - 1, col, 2, type, num);
 			}
 			break;
 		case 3:
 			if (col + 1 < Common.rowColLength
 					&& (grid[row][col + 1].type == type)) {
-				breakJewels(row, col + 1, 3, type);
+				breakJewels(row, col + 1, 3, type,num);
 			}
-			break;
-		case 4:
+
 			if (col - 1 >= 0 && (grid[row][col - 1].type == type)) {
-				breakJewels(row, col - 1, 4, type);
+				breakJewels(row, col - 1, 4, type,num);
 			}
 			break;
 		}
@@ -241,7 +233,7 @@ public class Grid extends JPanel implements MouseListener {
 		if (grid[row][col].type > 0) {
 			grid[row][col].type = 0;
 			hud.scored(1);
-			this.pushLabel(row,col);
+			this.pushLabel(row,col,num);
 		}
 	}
 
@@ -274,18 +266,18 @@ public class Grid extends JPanel implements MouseListener {
 
 	// ~~ End Switch and Check Logic ~~ //
 
-	private void pushLabel(int row, int col) {
+	private void pushLabel(int row, int col,int num) {
 
 		if (!(listpush > 0)) {
 			
-			listpush = listNum;
+			listpush = num;
 			for (int i = Common.labelNum - 1; i > 0; i--) {
 				label[i][0] = label[i - 1][0];
 				label[i][1] = label[i - 1][1];
 				label[i][2] = label[i - 1][2];
 				label[i][3] = label[i - 1][3];
 			}
-			label[0][0] = listNum;
+			label[0][0] = num;
 			label[0][1] = Common.labelTime;
 			label[0][2] = row * Common.jewelWidth;
 			label[0][3] = col * Common.jewelWidth;
