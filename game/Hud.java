@@ -31,7 +31,9 @@ import javax.swing.JPanel;
 			bg.getHeight(null), Image.SCALE_SMOOTH)).getImage();
 			newGame = new JButton("New Game");
 			newGame.addActionListener(this);
+			
 			this.setLayout(null);
+			
 			newGame.setBounds(50, 85 , 100, 30);
 			this.add(newGame);	
 		}

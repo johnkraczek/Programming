@@ -10,10 +10,10 @@ public class Common {
 	public static final int fps = 30;
 	public static final int animationDur = 5; 
 	
-	public static final int jewelWidth = 35;
+	public static final int jewelWidth = 50;
 	public static final int jewelTypes = 6;
-	public static final int rowColLength = 12;
-
+	public static final int rowColLength = 8;
+	
 	public static final int frameHeight = 515;
 	public static final int frameWidth = 775;
 	
@@ -46,7 +46,7 @@ public class Common {
 	
 	//~~ Jewel Rendering ~~/
 	public static final String[] jewelPath = new String[] { "res/Jewel0.png","res/Jewel1.png",
-			"res/Jewel2.png", "res/Jewel3.png", "res/jewel4.png",
+			"res/Jewel2.png", "res/Jewel3.png", "res/Jewel4.png",
 			"res/Jewel5.png" };
 
 	public static Image[] jewelType = new Image[Common.jewelTypes];
